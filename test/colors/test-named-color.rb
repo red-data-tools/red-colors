@@ -1,5 +1,3 @@
-require_relative '../test_helper'
-
 class ColorsNamedColorTest < Test::Unit::TestCase
   sub_test_case("Charty::Colors[]") do
     Charty::Colors::ColorData::DEFAULT_COLOR_CYCLE.each_with_index do |c, i|

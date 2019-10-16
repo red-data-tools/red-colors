@@ -1,5 +1,3 @@
-require_relative "../test_helper"
-
 class ColorsXYZTest < Test::Unit::TestCase
   sub_test_case("#luv_components") do
     test("on ITU-R BT.709 D65 white point") do

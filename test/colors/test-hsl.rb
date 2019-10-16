@@ -1,5 +1,3 @@
-require_relative '../test_helper'
-
 class ColorsHSLTest < Test::Unit::TestCase
   include TestHelper
 

@@ -1,5 +1,3 @@
-require_relative './test_helper'
-
 class ColorsTest < Test::Unit::TestCase
   test("Charty.RGB") do
     assert_equal(Charty::Colors::RGB.new(1, 2, 3),
