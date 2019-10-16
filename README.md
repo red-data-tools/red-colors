@@ -1,5 +1,7 @@
 # Red Colors
 
+![](https://github.com/red-data-tools/red-colors/workflows/CI/badge.svg)
+
 ## Description
 
 Red Colors provides a wide array of features for dealing with colors.
