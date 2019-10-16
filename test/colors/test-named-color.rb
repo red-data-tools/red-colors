@@ -6,7 +6,7 @@ class ColorsNamedColorTest < Test::Unit::TestCase
       data("Color cycle: #{name}=#{c}", [name, expected])
     end
     Charty::Colors::ColorData::BASE_COLORS.each do |name, (r, g, b)|
-      expected = Charty.RGB(r, g, b)
+      expected = Charty::Colors::RGB.new(r, g, b)
       data("Base color: #{name}=(#{r}, #{g}, #{b})", [name, expected])
     end
     Charty::Colors::ColorData::TABLEAU_COLORS.each do |name, hex_string|
