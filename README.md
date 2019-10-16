@@ -26,4 +26,4 @@ To be described later.
 
 ## License
 
-The MIT license. See `[LICENSE.txt](LICENSE.txt)` for details.
+The MIT license. See [`LICENSE.txt`](LICENSE.txt) for details.
