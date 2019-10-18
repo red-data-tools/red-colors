@@ -5,7 +5,8 @@ on:
 - pull_request
 
 jobs:
-  build:
+  test:
+    name: Test
 
     runs-on: ubuntu-latest
 
