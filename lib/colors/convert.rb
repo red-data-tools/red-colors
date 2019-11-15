@@ -168,11 +168,12 @@ module Colors
       [  0.05563007969699360846, -0.20397695888897656435,  1.05697151424287856072 ]
     ]
     def xyz_to_rgb(x, y, z)
-      c = dot_product(XYZ2RGB, [x, y, z])
+      r, g, b = dot_product(XYZ2RGB, [x, y, z])
+      r, g, b = srgb_to_linear_srgb(r, g, b)
       [
-        srgb_compand(c[0]).clamp(0r, 1r),
-        srgb_compand(c[1]).clamp(0r, 1r),
-        srgb_compand(c[2]).clamp(0r, 1r)
+        r.clamp(0r, 1r),
+        g.clamp(0r, 1r),
+        b.clamp(0r, 1r)
       ]
     end
   end
