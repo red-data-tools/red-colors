@@ -1,5 +1,3 @@
-require_relative 'color_data'
-
 module Colors
   module NamedColors
     class Mapping

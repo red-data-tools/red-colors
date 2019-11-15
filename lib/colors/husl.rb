@@ -1,5 +1,3 @@
-require_relative "convert"
-
 module Colors
   # Human-friendly alternative to HSL color space.
   # The definition of HUSL is provided in <http://www.hsluv.org>.

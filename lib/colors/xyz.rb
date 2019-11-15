@@ -1,6 +1,3 @@
-require_relative "convert"
-require_relative "helper"
-
 module Colors
   class XYZ < AbstractColor
     include Helper
