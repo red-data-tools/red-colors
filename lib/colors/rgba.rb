@@ -1,24 +1,30 @@
 module Colors
   class RGBA < RGB
     def self.parse(hex_string)
-      case hex_string.to_str.match(/\A#(\h+)\z/) { $1 }.length
+      error_message = "must be a hexadecimal string of " +
+                      "`#rrggbbaa`, `#rgba`, `#rrggbb` or `#rgb` form"
+      unless hex_string.respond_to?(:to_str)
+        raise ArgumentError, "#{error_message}: #{hex_string.inspect}"
+      end
+
+      hex_string = hex_string.to_str
+      hexes = hex_string.match(/\A#(\h+)\z/) { $1 }
+      case hexes&.length
       when 3  # rgb
-        r, g, b = hex_string.scan(/\h/).map {|h| h.hex * 17 }
+        r, g, b = hexes.scan(/\h/).map {|h| h.hex * 17 }
         new(r, g, b, 255)
       when 6  # rrggbb
-        r, g, b = hex_string.scan(/\h{2}/).map(&:hex)
+        r, g, b = hexes.scan(/\h{2}/).map(&:hex)
         new(r, g, b, 255)
       when 4 # rgba
-        r, g, b, a = hex_string.scan(/\h/).map {|h| h.hex * 17 }
+        r, g, b, a = hexes.scan(/\h/).map {|h| h.hex * 17 }
         new(r, g, b, a)
       when 8 # rrggbbaa
-        r, g, b, a = hex_string.scan(/\h{2}/).map(&:hex)
+        r, g, b, a = hexes.scan(/\h{2}/).map(&:hex)
         new(r, g, b, a)
       else
-        raise ArgumentError, "Invalid hex string: #{hex_string.inspect}"
+        raise ArgumentError, "#{error_message}: #{hex_string.inspect}"
       end
-    rescue NoMethodError
-      raise ArgumentError, "hex_string must be a hexadecimal string of `#rrggbb` or `#rgb` form"
     end
 
     def initialize(r, g, b, a)
