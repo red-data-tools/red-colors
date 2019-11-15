@@ -102,11 +102,10 @@ module Colors
       when Symbol
         name = name.to_s
       else
+        return false unless name.respond_to?(:to_str)
         name = name.to_str
       end
       name.match?(/\AC\d+\z/)
-    rescue NoMethodError, TypeError
-      false
     end
   end
 end
