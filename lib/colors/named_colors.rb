@@ -18,19 +18,18 @@ module Colors
         end
       end
 
-      private def lookup_no_color_cycle(color)
-        orig_color = color
-        case color
+      private def lookup_no_color_cycle(name)
+        case name
         when /\Anone\z/i
           return RGBA.new(0, 0, 0, 0)
         when String
           # nothing to do
         when Symbol
-          color = color.to_s
+          name = name.to_s
         else
-          color = color.to_str
+          name = name.to_str
         end
-        color = @mapping.fetch(color, color)
+        color = @mapping.fetch(name, name)
         case color
         when /\A#\h+\z/
           case color.length - 1
