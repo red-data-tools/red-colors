@@ -23,9 +23,13 @@ module Colors
       RGB.new(*rgb_components)
     end
 
-    def rgb_components
+    def to_xyz
       x, y, z = Convert.lch_to_xyz(*lch_components)
-      XYZ.new(x, y, z).rgb_components
+      XYZ.new(x, y, z)
+    end
+
+    def rgb_components
+      to_xyz.rgb_components
     end
 
     def lch_components
