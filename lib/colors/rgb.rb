@@ -1,3 +1,4 @@
+require_relative 'convert'
 require_relative 'helper'
 
 module Colors
@@ -112,11 +113,14 @@ module Colors
     end
 
     def to_husl
-      HUSL.from_rgb(r, g, b)
+      c = RGB.new(r, g, b).to_xyz
+      l, u, v = c.luv_components(WHITE_POINT_D65)
+      h, s, l = Convert.luv_to_husl(l, u, v)
+      HUSL.new(h, s.to_r.clamp(0r, 1r), l.to_r.clamp(0r, 1r))
     end
 
     def to_xyz
-      XYZ.from_rgb(r, g, b)
+      XYZ.new(*Convert.rgb_to_xyz(r, g, b))
     end
 
     private def canonicalize(r, g, b)
