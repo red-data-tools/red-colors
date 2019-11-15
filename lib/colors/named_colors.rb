@@ -6,17 +6,15 @@ module Colors
         @cache = {}
       end
 
-      attr_reader :cache
-
       def [](name)
         if NamedColors.nth_color?(name)
           cycle = ColorData::DEFAULT_COLOR_CYCLE
           name = cycle[name[1..-1].to_i % cycle.length]
         end
-        if cache.has_key?(name)
-          cache[name]
+        if @cache.has_key?(name)
+          @cache[name]
         else
-          cache[name] = lookup_no_color_cycle(name)
+          @cache[name] = lookup_no_color_cycle(name)
         end
       end
 
@@ -62,19 +60,19 @@ module Colors
       def []=(name, value)
         @mapping[name] = value
       ensure
-        cache.clear
+        @cache.clear
       end
 
       def delete(name)
         @mapping.delete(name)
       ensure
-        cache.clear
+        @cache.clear
       end
 
       def update(other)
         @mapping.update(other)
       ensure
-        cache.clear
+        @cache.clear
       end
     end
 
