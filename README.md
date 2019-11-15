@@ -20,6 +20,7 @@ $ gem install red-colors
 - HSL
 - HSLA
 - HUSL
+- xyY
 - XYZ
 
 ## Usage
