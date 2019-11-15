@@ -6,12 +6,6 @@ module Colors
 
     KAPPA = (29/3)**3
 
-    def self.from_xyY(x, y, large_y)
-      large_x = large_y*x/y
-      large_z = large_y*(1 - x - y)/y
-      new(large_x, large_y, large_z)
-    end
-
     def initialize(x, y, z)
       @x, @y, @z = canonicalize(x, y, z)
     end
