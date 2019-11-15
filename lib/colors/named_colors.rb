@@ -11,11 +11,7 @@ module Colors
           cycle = ColorData::DEFAULT_COLOR_CYCLE
           name = cycle[name[1..-1].to_i % cycle.length]
         end
-        if @cache.has_key?(name)
-          @cache[name]
-        else
-          @cache[name] = lookup_no_color_cycle(name)
-        end
+        @cache[name] ||= lookup_no_color_cycle(name)
       end
 
       private def lookup_no_color_cycle(name)
