@@ -10,6 +10,7 @@ require_relative "colors/rgb"
 require_relative "colors/rgba"
 require_relative "colors/xyz"
 
+require_relative "colors/color_data"
 require_relative "colors/named_colors"
 
 module Colors
