@@ -27,6 +27,8 @@ $ gem install red-colors
 
 To be described later.
 
+See the [documentation](https://rubydoc.info/gems/red-colors) for now.
+
 ## License
 
 The MIT license. See [`LICENSE.txt`](LICENSE.txt) for details.
