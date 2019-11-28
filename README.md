@@ -23,11 +23,11 @@ $ gem install red-colors
 - xyY
 - XYZ
 
-See the [documentation](https://rubydoc.info/gems/red-colors) for details.
-
 ## Usage
 
 To be described later.
+
+See the [documentation](https://rubydoc.info/gems/red-colors) for now.
 
 ## License
 
