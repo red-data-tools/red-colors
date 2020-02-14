@@ -53,7 +53,7 @@ module Colors
 
     # degree -> ???
 
-    DEG2RAD = 0.01745329251994329577r  # 2 * pi / 360
+    DEG2RAD = 1745329251994329577/100000000000000000000r  # 2 * pi / 360
     def degree_to_radian(d)
       d * DEG2RAD
     end
