@@ -8,14 +8,31 @@ jobs:
   test:
     name: Test
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - ubuntu-latest
+        - macos-latest
+        - windows-latest
+        ruby_version:
+        - 2.7
+        - 2.6
+        - 2.5
+        - 2.4
+        - jruby
+        - truffleruby
 
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Ruby 2.6
-      uses: actions/setup-ruby@v1
+
+    - name: Setup Ruby
+      uses: eregon/use-ruby-action@v1
       with:
-        ruby-version: 2.6.x
+        ruby-version: ${{ matrix.ruby_version }}
+
     - name: Build and test with Rake
       run: |
         gem install bundler
