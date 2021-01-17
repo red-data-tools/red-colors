@@ -318,4 +318,34 @@ class ColorsRGBTest < Test::Unit::TestCase
     assert_near(Colors::HUSL.new(0r, 0r, 1r),
                 Colors::RGB.new(1r, 1r, 1r).to_husl)
   end
+
+  data do
+    data_set = {}
+    # colors 16-231 are a 6x6x6 color cube
+    (0...6).each do |r|
+      (0...6).each do |g|
+        (0...6).each do |b|
+          code = 6*(6*r + g) + b + 16
+          red   = (r > 0) ? 40*r + 55 : r
+          green = (g > 0) ? 40*g + 55 : g
+          blue  = (b > 0) ? 40*b + 55 : b
+          label = "Color #{code} is rgb(#{red}, #{green}, #{blue})"
+          data_set[label] = [code, Colors::RGB.new(red, green, blue)]
+        end
+      end
+    end
+    # colors 232-256 are grayscale colors
+    (0...24).each do |y|
+      code = 232 + y
+      level = 10*y + 8
+      label = "Color #{code} is gray(#{level})"
+      data_set[label] = [code, Colors::RGB.new(level, level, level)]
+    end
+    data_set
+  end
+  def test_to_xterm256
+    code, rgb = data
+    assert_equal(Colors::Xterm256.new(code),
+                 rgb.to_xterm256)
+  end
 end
