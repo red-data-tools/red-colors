@@ -341,6 +341,36 @@ class ColorsRGBTest < Test::Unit::TestCase
       label = "Color #{code} is gray(#{level})"
       data_set[label] = [code, Colors::RGB.new(level, level, level)]
     end
+    # Some colors to check cloest color finder
+    [
+      [   0,   0,   8,  16 ],
+      [   0,   8,   0,  16 ],
+      [  11,   0,   0,  16 ],
+      [   0,   0,  12, 232 ],
+      [   0,  12,   0, 232 ],
+      [  12,   0,   0, 232 ],
+
+      [   0,   0,  75,  17 ],
+      [   0,  75,   0,  22 ],
+      [  75,   0,   0,  52 ],
+
+      [   0, 128, 128,  30 ],
+      [ 102, 102, 102, 241 ],
+      [ 103, 103, 103, 242 ],
+      [ 208, 238, 238, 254 ],
+      [ 208, 208, 238, 189 ],
+
+      # TODO: Reconsider the following cases
+      [   0,   0,  55, 233 ],
+      [   0,  55,   0, 233 ],
+      [  55,   0,   0, 233 ],
+      [   0,   0,  74, 234 ],
+      [   0,  74,   0, 234 ],
+      [  74,   0,   0, 234 ],
+    ].each do |r, g, b, code|
+      label = "rgb(#{r}, #{g}, #{b}) is color #{code}"
+      data_set[label] = [code, Colors::RGB.new(r, g, b)]
+    end
     data_set
   end
   def test_to_xterm256
