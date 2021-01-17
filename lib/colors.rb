@@ -8,6 +8,7 @@ require_relative "colors/hsla"
 require_relative "colors/husl"
 require_relative "colors/rgb"
 require_relative "colors/rgba"
+require_relative "colors/xterm256"
 require_relative "colors/xyy"
 require_relative "colors/xyz"
 
