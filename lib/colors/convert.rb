@@ -148,6 +148,51 @@ module Colors
       dot_product(RGB2XYZ, srgb_to_linear_srgb(r, g, b))
     end
 
+    def rgb_to_xterm256(r, g, b)
+      i = closest_xterm256_rgb_index(r)
+      j = closest_xterm256_rgb_index(g)
+      k = closest_xterm256_rgb_index(b)
+
+      r0 = xterm256_rgb_index_to_rgb_value(i)
+      g0 = xterm256_rgb_index_to_rgb_value(j)
+      b0 = xterm256_rgb_index_to_rgb_value(k)
+      d0 = (r - r0)**2 + (g - g0)**2 + (b - b0)**2
+
+      l = closest_xterm256_gray_index(r, g, b)
+      gr = xterm256_gray_index_to_gray_level(l)
+      d1 = (r - gr)**2 + (g - gr)**2 + (b - gr)**2
+
+      if d0 > d1
+        xterm256_gray_index_to_code(l)
+      else
+        xterm256_rgb_indices_to_code(i, j, k)
+      end
+    end
+
+    def xterm256_rgb_index_to_rgb_value(i)
+      (i == 0) ? 0 : (40*i + 55)/255.0
+    end
+
+    def closest_xterm256_rgb_index(x)
+      ([x*255 - 55, 0].max / 40.0).round
+    end
+
+    def xterm256_gray_index_to_gray_level(i)
+      (10*i + 8)/255.0
+    end
+
+    def closest_xterm256_gray_index(r, g, b)
+      ((255*(r + g + b) - 24)/30.0).round.clamp(0, 23)
+    end
+
+    def xterm256_rgb_indices_to_code(i, j, k)
+      6*(6*i + j) + k + 16
+    end
+
+    def xterm256_gray_index_to_code(i)
+      i + 232
+    end
+
     # sRGB -> ???
 
     def srgb_to_linear_srgb(r, g, b)
