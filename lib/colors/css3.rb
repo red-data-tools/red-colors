@@ -30,18 +30,6 @@ module Colors
   
   class CSS3
 
-    CSS_INT = '[-+]?\d+'
-    CSS_PCT = '[-+]?\d+%'
-    CSS_AFLT = %r/[-+]?\d*[.]?\d+/
-
-    RGB_MATCH = %r/\Argb\((.*)\)\z/
-    RGBA_MATCH = %r/\Argba\((.*)\)\z/
-    HSL_PREMATCH = %r/\Ahsl\((.*)\)\z/
-    HSLA_PREMATCH = %r/\Ahsla\((.*)\)\z/
-    HSL_MATCH  = %r/\Ahsl\( \s* (?<hue>#{CSS_INT}) \s* , \s* (?<saturation>#{CSS_PCT}) \s* , \s* (?<lightness>#{CSS_PCT}) \s* \)\z/x
-    HSLA_MATCH = %r/\Ahsla\( \s* (?<hue>#{CSS_INT}) \s* , \s* (?<saturation>#{CSS_PCT}) \s* , \s* (?<lightness>#{CSS_PCT}) \s* , \s* (?<alpha>#{CSS_AFLT}) \s* \)\z/x
-
-    
     # Factory method for generating RGB/RGBA/HSL/HSLA Objects.
     # Parsing based on spec https://www.w3.org/TR/css-color-3 ; section 4.2
                                     
@@ -52,51 +40,45 @@ module Colors
       end
 
       css_string = css_string.to_str.strip
-
-      case css_string
-      when RGB_MATCH
-        rgb = RGB_MATCH.match(css_string)[1].strip.split(/\s*,\s*/)
-        raise ArgumentError, "Expecting 3 fields for rgb(): #{css_string.inspect}" if rgb.length != 3
-        num_percent_vals = rgb.count { |v| v[-1] == '%' }
-        r, g, b = if num_percent_vals == 0
-                    rgb.map { |c| CSSUtil.clamp_int(c) }
-                  elsif num_percent_vals == 3
-                    rgb.map { |c| CSSUtil.clamp_percent(c) }
-                  else
-                    raise ArgumentError, "Invalid mix of percent and integer values:  #{css_string.inspect}"
-                  end
-        return RGB.new(r, g, b)
-      when RGBA_MATCH
-        rgba = RGBA_MATCH.match(css_string)[1].strip.split(/\s*,\s*/)
-        raise ArgumentError, "Expecting 4 fields for rgba(): #{css_string.inspect}" if rgba.length != 4
-        rgb = rgba[0..2]
-        num_percent_vals = rgb.count { |v| v[-1] == '%' }
-        if num_percent_vals == 0
-          r, g, b = rgb.map { |c| CSSUtil.clamp_int(c) }
-          # note, RGBA.new expects all values to be integers or floats.
-          # for this case, we turn the alpha-value into an int range 0..255 to match the r,g,b values.
-          a = (CSSUtil.clamp_alpha(rgba[3]) * 255).to_i
-        elsif num_percent_vals == 3
-          r, g, b = rgb.map { |c| CSSUtil.clamp_percent(c) }
-          a = CSSUtil.clamp_alpha(rgba[3])
-        else
-          raise ArgumentError, "Invalid mix of percent and integer values:  #{css_string.inspect}"
+      matcher = /\A(rgb|rgba|hsl|hsla)\((.*)\)\z/.match(css_string)
+      if matcher
+        css_type, argstring = matcher[1..2]
+        arglist = argstring.strip.split(/\s*,\s*/)
+        has_alpha = css_type[-1] == 'a' # rgba/hsla
+        if has_alpha && arglist.length !=4
+          raise ArgumentError, "Expecting 4 fields for #{css_type}(): #{css_string.inspect}"
+        elsif !has_alpha && arglist.length !=3
+          raise ArgumentError, "Expecting 3 fields for #{css_type}(): #{css_string.inspect}"
         end
-        return RGBA.new(r, g, b, a)
-      when HSL_PREMATCH
-        matcher = HSL_MATCH.match(css_string)
-        raise ArgumentError, "Bad hsl(): #{css_string.inspect}" unless matcher
-        # CSS Hue values are an angle, unclear if we should convert to int or float
-        h = matcher[:hue].to_i
-        s, l = %i[saturation lightness].map { |c| CSSUtil.clamp_percent(matcher[c]) }
-        return HSL.new(h, s, l)
-      when HSLA_PREMATCH
-        matcher = HSLA_MATCH.match(css_string)
-        raise ArgumentError, "Bad hsla(): #{css_string.inspect}" unless matcher
-        h = matcher[:hue].to_i
-        s, l = %i[saturation lightness].map { |c| CSSUtil.clamp_percent(matcher[c]) }
-        a = CSSUtil.clamp_alpha(matcher[:alpha])
-        return HSLA.new(h, s, l, a)
+          
+        case css_type
+        when /rgb/
+          rgb, alpha =  arglist[0..2], arglist[3]
+          num_percent_vals = rgb.count { |v| v[-1] == '%' }
+          if num_percent_vals == 0
+            r, g, b = rgb.map { |c| CSSUtil.clamp_int(c) }
+            # note, RGBA.new expects all values to be integers or floats.
+            # for this case, we turn the alpha-value into an int range 0..255 to match the r,g,b values.
+            a = alpha ? (CSSUtil.clamp_alpha(alpha) * 255).to_i : nil
+            
+          elsif num_percent_vals == 3
+            r, g, b = rgb.map { |c| CSSUtil.clamp_percent(c) }
+            a = alpha ? CSSUtil.clamp_alpha(alpha) : nil
+          else
+            raise ArgumentError, "Invalid mix of percent and integer values:  #{css_string.inspect}"
+          end
+          return a ? RGBA.new(r, g, b, a) : RGB.new(r, g, b)
+        when /hsl/
+          hue, sat, light, alpha = *arglist
+          # CSS Hue values are an angle, unclear if we should convert to Integer or Rational here.
+          h = hue.to_r
+          s, l = [sat, light].map { |c| CSSUtil.clamp_percent(c) }
+          a = alpha ? CSSUtil.clamp_alpha(alpha) : nil
+          return a ? HSLA.new(h, s, l, a) : HSL.new(h, s, l)
+        else
+          raise "Illegal condition"
+        end
+        
       else
         raise ArgumentError, "#{error_message}: #{css_string.inspect}"
       end
