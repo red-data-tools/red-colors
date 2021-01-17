@@ -2,28 +2,22 @@ module Colors
 
   module CSSUtil
 
-    # For RGB, CSS clamps negative values to zero and anything over 255 to 255
+    # For RGB, CSS clamps values at min=0, max=255
     def self.clamp_int(strval)
-      value = strval.to_i
-      return 0 if value < 0
-      return 255 if value > 255
-      value
+      [[strval.to_i, 0].max, 255].min
     end
     
     # Rationalize a percentage string, e.g.:  "1.2%"
     # takes advantage of #to_r ignoring the '%' character.
+    # Clamp between 0r and 1r
     def self.clamp_percent(strval)
-      value = strval.to_r / 100
-      return 0r if value < 0r
-      return 1r if value > 1r
-      value
+      [[strval.to_r / 100, 0r].max, 1r].min
     end
     
+    # Rationalize alpha value.
+    # Clamp between 0r and 1r
     def self.clamp_alpha(strval)
-      value = strval.to_r
-      return 0r if value < 0r
-      return 1r if value > 1r
-      value
+      [[strval.to_r, 0r].max, 1r].min
     end
     
   end
@@ -55,6 +49,8 @@ module Colors
         when /rgb/
           rgb, alpha =  arglist[0..2], arglist[3]
           num_percent_vals = rgb.count { |v| v[-1] == '%' }
+          # CSS3 allows RGB values to be specified with all 3 as a percentage "##%"
+          # or all as integer values without '%' sign.
           if num_percent_vals == 0
             r, g, b = rgb.map { |c| CSSUtil.clamp_int(c) }
             # note, RGBA.new expects all values to be integers or floats.
@@ -70,7 +66,7 @@ module Colors
           return a ? RGBA.new(r, g, b, a) : RGB.new(r, g, b)
         when /hsl/
           hue, sat, light, alpha = *arglist
-          # CSS Hue values are an angle, unclear if we should convert to Integer or Rational here.
+          # CSS3 Hue values are an angle, unclear if we should convert to Integer or Rational here.
           h = hue.to_r
           s, l = [sat, light].map { |c| CSSUtil.clamp_percent(c) }
           a = alpha ? CSSUtil.clamp_alpha(alpha) : nil
