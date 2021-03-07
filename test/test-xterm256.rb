@@ -73,4 +73,33 @@ class ColorsXterm256Test < Test::Unit::TestCase
     assert_equal(rgb,
                  Colors::Xterm256.new(code).to_rgb)
   end
+
+  def test_from_rgb
+
+    (16..255).each do |xtnum|
+      xt = Colors::Xterm256.new(xtnum)
+      rgb = xt.to_rgb
+      xtnew = Colors::Xterm256.from_rgb(rgb)
+      assert_equal(xt.code, xtnew.code)
+    end
+    
+    # spot-check some values from http://jonasjacek.github.io/colors/
+    data = { '#00005f' => 17, # NavyBlue
+             '#00ff87' => 48, # SpringGreen1
+             '#afd7ff' => 153, # LightSkyBlue1
+             '#d75f00' => 166, # DarkOrange3
+             '#d7ffff' => 195, # LightCyan1
+             '#ff0000' => 196, # Red1
+             '#ff87ff' => 213, # Orchid1
+             '#767676' => 243, # Grey46
+           }
+
+    data.each do |hexstr, xtref|
+      rgb = Colors::RGB.parse(hexstr)
+      xtnew = Colors::Xterm256.from_rgb(rgb)
+      assert_equal(xtref, xtnew.code)
+    end
+
+  end
+  
 end
