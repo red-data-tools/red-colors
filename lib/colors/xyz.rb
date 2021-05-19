@@ -4,7 +4,7 @@ module Colors
 
     EPSILON = (6/29r)**3
 
-    KAPPA = (29/3)**3
+    KAPPA = (29/3r)**3
 
     def initialize(x, y, z)
       @x, @y, @z = canonicalize(x, y, z)
