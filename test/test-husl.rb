@@ -177,7 +177,7 @@ class ColorsHUSLTest < Test::Unit::TestCase
   test("#desaturate") do
     c = Colors::RGB.new(1r, 1r, 0r).to_husl.desaturate(0.8)
     assert_instance_of(Colors::HUSL, c)
-    assert_near(Colors::HUSL.new(85.87432021817473r, 0.9838589961976354r, 0.8850923805142681r), c)
+    assert_near(Colors::HUSL.new(85.87432021817473r, 0.9838589961976354r, 0.8850923805142681r), c, 0.01)
   end
 
   test("#to_husl") do
