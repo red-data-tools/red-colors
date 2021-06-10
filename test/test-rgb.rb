@@ -292,31 +292,19 @@ class ColorsRGBTest < Test::Unit::TestCase
                  Colors::RGB.new(1r, 1r, 1r).to_hsl)
   end
 
-  test("#to_husl") do
-    # black
-    assert_equal(Colors::HUSL.new(0, 0, 0),
-                 Colors::RGB.new(0, 0, 0).to_husl)
-    # red
-    assert_near(Colors::HUSL.new(12.177050630061776r, 1r, 0.5323711559542933r),
-                Colors::RGB.new(1r, 0, 0).to_husl)
-    # yellow
-    assert_near(Colors::HUSL.new(85.87432021817473r, 1r, 0.9713855934179674r),
-                Colors::RGB.new(1r, 1r, 0).to_husl)
-    # green
-    assert_near(Colors::HUSL.new(127.71501294924047r, 1r, 0.8773551910965973r),
-                Colors::RGB.new(0r, 1r, 0).to_husl)
-    # cyan
-    assert_near(Colors::HUSL.new(192.17705063006116r, 1r, 0.9111475231670507r),
-                Colors::RGB.new(0r, 1r, 1r).to_husl)
-    # blue
-    assert_near(Colors::HUSL.new(265.8743202181779r, 1r, 0.3230087290398002r),
-                Colors::RGB.new(0r, 0r, 1r).to_husl)
-    # magenta
-    assert_near(Colors::HUSL.new(307.7150129492436r, 1r, 0.60322731354551294r),
-                Colors::RGB.new(1r, 0r, 1r).to_husl)
-    # white
-    assert_near(Colors::HUSL.new(0r, 0r, 1r),
-                Colors::RGB.new(1r, 1r, 1r).to_husl)
+  data(
+    "red"     => { rgb: "#ff0000", husl: [ 12.16, 1.0, 0.532] },
+    "yellow"  => { rgb: "#ffff00", husl: [ 85.90, 1.0, 0.971] },
+    "green"   => { rgb: "#00ff00", husl: [127.72, 1.0, 0.877] },
+    "cyan"    => { rgb: "#00ffff", husl: [192.20, 1.0, 0.911] },
+    "blue"    => { rgb: "#0000ff", husl: [265.87, 1.0, 0.323] },
+    "magenta" => { rgb: "#ff00ff", husl: [307.71, 1.0, 0.603] }
+  )
+  def test_to_husl(data)
+      husl_components, hex_string = data.values_at(:husl, :rgb)
+      husl = Colors::HUSL.new(*husl_components)
+      rgb = Colors::RGB.parse(hex_string)
+      assert_near(husl, rgb.to_husl, 0.03)
   end
 
   data do
