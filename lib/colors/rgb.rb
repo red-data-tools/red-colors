@@ -118,7 +118,7 @@ module Colors
       c = RGB.new(r, g, b).to_xyz
       l, u, v = c.luv_components(WHITE_POINT_D65)
       h, s, l = Convert.luv_to_husl(l, u, v)
-      HUSL.new(h, s.to_r.clamp(0r, 1r), l.to_r.clamp(0r, 1r))
+      HUSL.new(h, s.clamp(0r, 1r).to_r, l.clamp(0r, 1r).to_r)
     end
 
     def to_xyz
