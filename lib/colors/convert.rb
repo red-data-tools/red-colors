@@ -1,3 +1,5 @@
+require "matrix"
+
 module Colors
   module Convert
     module_function
@@ -14,6 +16,11 @@ module Colors
         end
         product
       end
+    end
+
+    private def matrix_inv(matrix)
+      matrix = Matrix[*matrix]
+      matrix.inv.to_a
     end
 
     def max_chroma(l, h)
@@ -35,9 +42,9 @@ module Colors
 
       bounds = Array.new(6) { [0r, 0r] }
       0.upto(2) do |ch|
-        m1 = XYZ2RGB[ch][0].to_r
-        m2 = XYZ2RGB[ch][1].to_r
-        m3 = XYZ2RGB[ch][2].to_r
+        m1 = M_XYZ_RGB[ch][0].to_r
+        m2 = M_XYZ_RGB[ch][1].to_r
+        m3 = M_XYZ_RGB[ch][2].to_r
 
         [0, 1].each do |t|
           top1 = (284517r * m1 - 94839r * m3) * sub2
@@ -109,14 +116,9 @@ module Colors
 
     def luv_to_lch(l, u, v)
       c = Math.sqrt(u*u + v*v).to_r
-
-      if c < 1e-8
-        h = 0r
-      else
-        h = Math.atan2(v, u).to_r * 180/Math::PI.to_r
-        h += 360r if h < 0
-      end
-
+      hard = Math.atan2(v, u).to_r
+      h = hard * 180 / Math::PI.to_r
+      h += 360r if h < 0
       [l, c, h]
     end
 
@@ -195,26 +197,68 @@ module Colors
 
     # sRGB -> ???
 
+    def srgb_from_linear_srgb(r, g, b)
+      a = 0.055r
+      [r, g, b].map do |v|
+        if v < 0.0031308
+          12.92r * v
+        else
+          (1 + a) * v**(1/2.4r) - a
+        end
+      end
+    end
+
     def srgb_to_linear_srgb(r, g, b)
+      a = 0.055r
       [r, g, b].map do |v|
         if v > 0.04045
-          ((v + 0.055r) / 1.055r) ** 2.4r
+          ((v + a) / (1 + a)) ** 2.4r
         else
           v / 12.92r
         end
       end
     end
 
+    # xyY -> ???
+
+    def xyy_to_xyz(x, y, large_y)
+      large_x = large_y*x/y
+      large_z = large_y*(1 - x - y)/y
+      [large_x, large_y, large_z]
+    end
+
     # XYZ -> ???
 
-    XYZ2RGB = [
-      [  3.24096994190452134377, -1.53738317757009345794, -0.49861076029300328366 ],
-      [ -0.96924363628087982613,  1.87596750150772066772,  0.04155505740717561247 ],
-      [  0.05563007969699360846, -0.20397695888897656435,  1.05697151424287856072 ]
+    # sRGB reference points
+    R_xyY = [0.64r, 0.33r, 1r]
+    G_xyY = [0.30r, 0.60r, 1r]
+    B_xyY = [0.15r, 0.06r, 1r]
+    D65_xyY = [0.3127r, 0.3290r, 1r]
+
+    R_XYZ = xyy_to_xyz(*R_xyY)
+    G_XYZ = xyy_to_xyz(*G_xyY)
+    B_XYZ = xyy_to_xyz(*B_xyY)
+    D65_XYZ = xyy_to_xyz(*D65_xyY)
+
+    M_P = [
+      [R_XYZ[0], G_XYZ[0], B_XYZ[0]],
+      [R_XYZ[1], G_XYZ[1], B_XYZ[1]],
+      [R_XYZ[2], G_XYZ[2], B_XYZ[2]]
     ]
+
+    M_S = dot_product(matrix_inv(M_P), D65_XYZ)
+
+    M_RGB_XYZ = (0 ... 3).map do |i|
+      (0 ... 3).map {|j| (M_S[j] * M_P[i][j]).round(4) }
+    end
+
+    M_XYZ_RGB = matrix_inv(M_RGB_XYZ).map do |row|
+      row.map {|v| v.round(4) }
+    end
+
     def xyz_to_rgb(x, y, z)
-      r, g, b = dot_product(XYZ2RGB, [x, y, z])
-      r, g, b = srgb_to_linear_srgb(r, g, b)
+      r, g, b = dot_product(M_XYZ_RGB, [x, y, z])
+      r, g, b = srgb_from_linear_srgb(r, g, b)
       [
         r.clamp(0r, 1r),
         g.clamp(0r, 1r),

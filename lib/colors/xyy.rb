@@ -34,9 +34,7 @@ module Colors
     end
 
     def to_xyz
-      large_x = large_y*x/y
-      large_z = large_y*(1 - x - y)/y
-      XYZ.new(large_x, large_y, large_z)
+      XYZ.new(*Convert.xyy_to_xyz(*components))
     end
 
     private def canonicalize(x, y, large_y)
