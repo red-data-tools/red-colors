@@ -20,7 +20,7 @@ module Colors
       xs = Array(x)
       scalar_p = (xs.length == 1) && xs[0] == x
 
-      if all_float?(xs)
+      if all_ratio?(xs)
         xs.map! do |v|
           v *= self.n_colors
           v = -1 if v < 0
@@ -118,8 +118,8 @@ module Colors
       raise NotImplementedError
     end
 
-    private def all_float?(ary)
-      ary.all? {|x| x.is_a?(Float) }
+    private def all_ratio?(ary)
+      ary.all? {|x| x.is_a?(Float) || x.is_a?(Rational) }
     end
 
     private def update_extreme_colors
