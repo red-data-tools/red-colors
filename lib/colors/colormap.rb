@@ -67,6 +67,53 @@ module Colors
       update_extreme_colors if @initialized
     end
 
+    PNG_WIDTH = 512
+    PNG_HEIGHT = 64
+
+    def to_png
+      require "chunky_png"
+      png = ChunkyPNG::Image.new(PNG_WIDTH, PNG_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
+      x = Utils.linspace(0, 1, PNG_WIDTH)
+      (0 ... PNG_WIDTH).each do |i|
+        color = self[x[i].to_f]
+        png_color = ChunkyPNG::Color.rgba(*color.components.map{|v| (v*255).to_i })
+        png.line(i, 0, i, PNG_HEIGHT-1, png_color)
+      end
+      png.to_blob
+    end
+
+    def to_html
+      require "base64"
+      png_blob = to_png
+      png_base64 = Base64.encode64(png_blob)
+      html = %Q[<div style="vertical-align: middle;">] +
+             %Q[<strong>#{self.name}</strong> ] +
+             %Q[</div>] +
+             %Q[<div class="cmap"><img alt="#{self.name} colormap" ] +
+             %Q[title="#{self.name}" style="border: 1px solid #555;" ] +
+             %Q[src="data:image/png;base64,#{png_base64}"></div>] +
+             %Q[<div style="vertical-align: middle; ] +
+             %Q[max-width: #{PNG_WIDTH + 2}px; ] +
+             %Q[display: flex; justify-content: space-between;">] +
+             %Q[<div style="float: left;">] +
+             %Q[#{html_color_block(under_color)} under</div>] +
+             # TODO: bad_color support
+             # %Q[<div style="margin: 0 auto; display: inline-block;">] +
+             # %Q[bad #{html_color_block(bad_color)}</div>] +
+             %Q[<div style="float: right;">] +
+             %Q[over #{html_color_block(over_color)}</div>]
+      ["text/html", html]
+    end
+
+    private def html_color_block(color)
+      hex_color = color.to_hex_string
+      html = %Q[<div title="#{hex_color}" style="display: inline-block; ] +
+             %Q[width: 1em; height: 1em; margin: 0; vertical-align: middle; ] +
+             %Q[border: 1px solid #555; background-color: #{hex_color};">] +
+             %Q[</div>]
+      html
+    end
+
     private def init_colormap
       raise NotImplementedError
     end
