@@ -1,3 +1,4 @@
+require_relative "colors/utils"
 require_relative "colors/alpha_component"
 require_relative "colors/convert"
 require_relative "colors/helper"
@@ -14,6 +15,10 @@ require_relative "colors/xyz"
 
 require_relative "colors/color_data"
 require_relative "colors/named_colors"
+
+require_relative "colors/colormap"
+require_relative "colors/listed_colormap"
+require_relative "colors/linear_segmented_colormap"
 
 module Colors
   # ITU-R BT.709 D65 white point
