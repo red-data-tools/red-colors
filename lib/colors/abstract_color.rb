@@ -4,6 +4,10 @@ module Colors
       unsupported __method__
     end
 
+    def inspect
+      "#{self.class.name}(#{components.join(", ")})"
+    end
+
     private def unsupported(name)
       raise NotImplementedError, "#{name} is unsupported in #{self.class}", caller(2)
     end
