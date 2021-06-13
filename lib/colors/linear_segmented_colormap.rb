@@ -115,5 +115,23 @@ module Colors
 
       return lut.map {|v| v.clamp(0, 1).to_f }
     end
+
+    private def make_reverse_colormap(name)
+      segmented_data_r = self.segmented_data.map { |key, data|
+        data_r = if data.respond_to?(:call)
+                   make_inverse_func(data)
+                 else
+                   data.reverse_each.map do |x, y0, y1|
+                     [1r - x, y1, y0]
+                   end
+                 end
+        [key, data_r]
+      }.to_h
+      LinearSegmentedColormap.new(name, segmented_data_r, n_colors: self.n_colors, gamma: self.gamma)
+    end
+
+    private def make_inverse_func(f)
+      ->(x) { f(1 - x) }
+    end
   end
 end

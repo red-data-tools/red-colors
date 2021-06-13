@@ -115,5 +115,24 @@ class ColorsLinearSegmentedColormapTest < Test::Unit::TestCase
                    after
                  ])
   end
+
+  def test_reversed
+    cm = Colors::LinearSegmentedColormap.new_from_list("four", [:red, :magenta, :green, :yellow, :blue], n_colors: 5)
+    cm.under_color = :black
+    cm.over_color = :white
+    rev = cm.reversed
+    assert_equal([
+                   "four_r",
+                   cm[[0, 1, 2, 3, 4]],
+                   Colors[:black],
+                   Colors[:white]
+                 ],
+                 [
+                   rev.name,
+                   rev[[4, 3, 2, 1, 0]],
+                   rev.under_color,
+                   rev.over_color
+                 ])
+  end
 end
 
