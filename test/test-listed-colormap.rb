@@ -112,4 +112,23 @@ class ColorsListedColormapTest < Test::Unit::TestCase
                    after
                  ])
   end
+
+  def test_reversed
+    cm = Colors::ListedColormap.new([:red, :green, :blue], name: "three")
+    cm.under_color = :orange
+    cm.over_color = :yellow
+    rev = cm.reversed
+    assert_equal([
+                   "three_r",
+                   cm[[0, 1, 2]],
+                   Colors[:orange],
+                   Colors[:yellow]
+                 ],
+                 [
+                   rev.name,
+                   rev[[2, 1, 0]],
+                   rev.under_color,
+                   rev.over_color
+                 ])
+  end
 end

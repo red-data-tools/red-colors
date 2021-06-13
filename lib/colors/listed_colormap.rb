@@ -37,5 +37,9 @@ module Colors
       @initialized = true
       update_extreme_colors
     end
+
+    private def make_reverse_colormap(name)
+      ListedColormap.new(self.colors.reverse, name: name, n_colors: self.n_colors)
+    end
   end
 end

@@ -67,6 +67,18 @@ module Colors
       update_extreme_colors if @initialized
     end
 
+    def reversed
+      rev_name = "#{self.name}_r" unless self.name.nil?
+      rev = make_reverse_colormap(rev_name)
+      rev.over_color = self.over_color
+      rev.under_color = self.under_color
+      return rev
+    end
+
+    private def make_reverse_colormap(name)
+      raise NotImplementedError
+    end
+
     PNG_WIDTH = 512
     PNG_HEIGHT = 64
 
