@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
     "#{spec.name}.gemspec",
   ]
   spec.files += [".yardopts"]
+  spec.files += Dir.glob("data/colormaps/*.json")
   spec.files += Dir.glob("lib/**/*.rb")
   spec.files += Dir.glob("image/*.*")
   spec.files += Dir.glob("doc/text/*")

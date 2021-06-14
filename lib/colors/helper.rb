@@ -7,7 +7,8 @@ module Colors
 
     private def check_range(value, range, name)
       return value if range.cover?(value)
-      check_fail ArgumentError, "#{name} must be in #{range}, but #{value} is given"
+      check_fail ArgumentError,
+                 "#{name} must be in #{range}, but %p is given" % value
     end
 
     private def check_fail(exc_class, message)

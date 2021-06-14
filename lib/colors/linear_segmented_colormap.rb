@@ -17,7 +17,7 @@ module Colors
       else
         ary = Array.try_convert(colors)
         if ary.nil?
-          raise ArgumentError, "colors must be convertible to an array"
+          raise ArgumentError, "colors must be convertible to an array: %p for %s" % [colors, name]
         else
           colors = ary
         end

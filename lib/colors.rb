@@ -19,6 +19,7 @@ require_relative "colors/named_colors"
 require_relative "colors/colormap"
 require_relative "colors/listed_colormap"
 require_relative "colors/linear_segmented_colormap"
+require_relative "colors/colormap_registry"
 
 module Colors
   # ITU-R BT.709 D65 white point
@@ -37,3 +38,5 @@ module Colors
     NamedColors[name]
   end
 end
+
+require_relative "colors/colormap_data"
