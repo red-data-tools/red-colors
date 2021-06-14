@@ -1,25 +1,5 @@
-require "json"
-require "pathname"
-
 module Colors
   module ColormapRegistry
-    LUT_SIZE = 512
-
-    top_dir = Pathname.new(__dir__).parent.parent.parent
-    @colormaps_dir = top_dir.join("data", "colormaps")
-
-    def self.load_colormap_data(name)
-      path = @colormaps_dir.join("#{name}.json")
-      json = File.read(path)
-      JSON.load(json, nil, symbolize_names: true, create_additions: false)
-    end
-
-    def self.register_listed_colormap(name, data=nil)
-      data = load_colormap_data(name) if data.nil?
-      colors = data.map {|r, g, b| Colors::RGB.new(r, g, b) }
-      BUILTIN_COLORMAPS[name] = ListedColormap.new(colors, name: name)
-    end
-
     register_listed_colormap("magma")
     register_listed_colormap("inferno")
     register_listed_colormap("plasma")
@@ -987,7 +967,7 @@ module Colors
       end
     end
 
-    cmaps_r = sorted_names.map do |name|
+    sorted_names.each do |name|
       spec = data[name]
       cmap = case
              when spec.is_a?(Hash) && spec.key?(:red)
@@ -1005,11 +985,6 @@ module Colors
                LinearSegmentedColormap.new_from_list(name.to_s, colors, n_colors: LUT_SIZE)
              end
       BUILTIN_COLORMAPS[cmap.name] = cmap
-      cmap.reversed
-    end
-
-    cmaps_r.each do |cmap_r|
-      BUILTIN_COLORMAPS[cmap_r.name] = cmap_r
     end
   end
 end
