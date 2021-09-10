@@ -39,14 +39,10 @@ module Colors
       end
     end
 
-    def to_grey_level
-      if code < 232
-        r, g, b = to_rgb_components
-        x, y, z = Convet.rgb_to_xyz(r, g, b)
-      else
-        grey = 10*(code - 232) + 8
-        canonicalize_component_from_integer(grey, :grey)
-      end
+    private def to_grey_level
+      # must be "code < 232"
+      grey = 10*(code - 232) + 8
+      canonicalize_component_from_integer(grey, :grey)
     end
 
     def to_rgb

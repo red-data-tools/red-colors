@@ -30,7 +30,6 @@ module Colors
       end
 
       if @registry.key?(name)
-        existing = @registry[name]
         if BUILTIN_COLORMAPS.key?(name)
           unless override_builtin
             raise ArgumentError,
