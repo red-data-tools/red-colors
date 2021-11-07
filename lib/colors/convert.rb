@@ -150,6 +150,12 @@ module Colors
       dot_product(RGB2XYZ, srgb_to_linear_srgb(r, g, b))
     end
 
+    def rgb_to_greyscale(r, g, b)
+      r, g, b = srgb_to_linear_srgb(r, g, b)
+      a = RGB2XYZ[1]
+      (a[0]*r + a[1]*g + a[2]*b).clamp(0, 1)
+    end
+
     def rgb_to_xterm256(r, g, b)
       i = closest_xterm256_rgb_index(r)
       j = closest_xterm256_rgb_index(g)

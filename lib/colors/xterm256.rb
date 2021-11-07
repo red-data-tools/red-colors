@@ -39,10 +39,15 @@ module Colors
       end
     end
 
-    private def to_grey_level
-      # must be "code < 232"
-      grey = 10*(code - 232) + 8
-      canonicalize_component_from_integer(grey, :grey)
+    def to_grey_level
+      if code < 232
+        r, g, b = to_rgb_components
+        y = Convert.rgb_to_greyscale(r, g, b)
+        canonicalize_component_to_rational(y, :grey)
+      else
+        grey = 10*(code - 232) + 8
+        canonicalize_component_from_integer(grey, :grey)
+      end
     end
 
     def to_rgb

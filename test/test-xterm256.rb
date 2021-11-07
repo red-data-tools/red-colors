@@ -44,7 +44,9 @@ class ColorsXterm256Test < Test::Unit::TestCase
     assert { Colors::Xterm256.new(16) != Colors::Xterm256.new(17) }
   end
 
-  data do
+  RGB2GREY = [0.21263900587151035754r, 0.71516867876775592746r, 0.07219231536073371500r]
+
+  data(keep: true) do
     data_set = {}
     # colors 16-231 are a 6x6x6 color cube
     (0...6).each do |r|
@@ -55,7 +57,10 @@ class ColorsXterm256Test < Test::Unit::TestCase
           green = (g > 0) ? 40*g + 55 : g
           blue  = (b > 0) ? 40*b + 55 : b
           label = "Color #{code} is rgb(#{red}, #{green}, #{blue})"
-          data_set[label] = [code, Colors::RGB.new(red, green, blue)]
+          rgb = Colors::RGB.new(red, green, blue)
+          red, green, blue = Colors::Convert.srgb_to_linear_srgb(*rgb.components)
+          grey = RGB2GREY[0]*red + RGB2GREY[1]*green + RGB2GREY[2]*blue
+          data_set[label] = [code, rgb, grey]
         end
       end
     end
@@ -63,14 +68,23 @@ class ColorsXterm256Test < Test::Unit::TestCase
     (0...24).each do |y|
       code = 232 + y
       level = 10*y + 8
+      grey = level/255r
       label = "Color #{code} is gray(#{level})"
-      data_set[label] = [code, Colors::RGB.new(level, level, level)]
+      data_set[label] = [code, Colors::RGB.new(level, level, level), grey]
     end
     data_set
   end
+
   def test_to_rgb(data)
-    code, rgb = data
+    code, rgb, _grey = data
     assert_equal(rgb,
                  Colors::Xterm256.new(code).to_rgb)
+  end
+
+  def test_to_grey_level(data)
+    code, _rgb, grey = data
+    assert_in_delta(grey,
+                    Colors::Xterm256.new(code).to_grey_level,
+                    1e-12)
   end
 end
