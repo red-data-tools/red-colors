@@ -80,8 +80,6 @@ module Colors
         raise ArgumentError, "data array must consist of 3-length arrays"
       end
 
-      shape = [ary.length, 3]
-
       x, y0, y1 = ary.transpose
 
       if x[0] != 0.0 || x[-1] != 1.0

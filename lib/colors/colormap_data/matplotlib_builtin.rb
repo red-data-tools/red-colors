@@ -956,7 +956,7 @@ module Colors
       a_data = data[a_key]
       b_data = data[b_key]
       a_listed = a_data.is_a?(Hash) && a_data.key?(:listed)
-      b_listed = a_data.is_a?(Hash) && a_data.key?(:listed)
+      b_listed = b_data.is_a?(Hash) && b_data.key?(:listed)
       case
       when !a_listed && b_listed
         -1

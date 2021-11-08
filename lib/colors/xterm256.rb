@@ -42,7 +42,8 @@ module Colors
     def to_grey_level
       if code < 232
         r, g, b = to_rgb_components
-        x, y, z = Convet.rgb_to_xyz(r, g, b)
+        y = Convert.rgb_to_greyscale(r, g, b)
+        canonicalize_component_to_rational(y, :grey)
       else
         grey = 10*(code - 232) + 8
         canonicalize_component_from_integer(grey, :grey)

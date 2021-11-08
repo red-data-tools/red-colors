@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-# TODO
-# $VERBOSE = true
+$VERBOSE = true
 
 require "pathname"
 
