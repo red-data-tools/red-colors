@@ -1,5 +1,5 @@
 module Colors
-  class CSS3
+  module CSS3
 
     # Factory method for generating RGB/RGBA/HSL/HSLA Objects.
     # Parsing based on spec https://www.w3.org/TR/css-color-3 ; section 4.2
