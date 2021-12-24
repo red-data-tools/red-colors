@@ -12,6 +12,7 @@ require_relative "colors/rgba"
 require_relative "colors/xterm256"
 require_relative "colors/xyy"
 require_relative "colors/xyz"
+require_relative "colors/css3"
 
 require_relative "colors/color_data"
 require_relative "colors/named_colors"
