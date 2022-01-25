@@ -8,7 +8,7 @@ module Colors
     # and also available as a text file at
     # https://xkcd.com/color/rgb.txt
     #
-    # License: http://creativecommons.org/publicdomain/zero/1.0/
+    # License: https://creativecommons.org/publicdomain/zero/1.0/
     XKCD_COLORS = {
       "xkcd:cloudy blue" => -"#acc2d9",
       "xkcd:dark pastel green" => -"#56ae57",
@@ -958,7 +958,7 @@ module Colors
       "xkcd:pink" => -"#ff81c0",
       "xkcd:blue" => -"#0343df",
       "xkcd:green" => -"#15b01a",
-      "xkcd:purple" => -"#7e1e9c"
+      "xkcd:purple" => -"#7e1e9c",
     }.freeze
   end
 end
