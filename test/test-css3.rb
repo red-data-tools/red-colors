@@ -2,7 +2,6 @@ class ColorsCSSParserTest < Test::Unit::TestCase
   include TestHelper
 
   sub_test_case("rgb") do
-
     test("simple in-range integer values") do
       ref = Colors::RGB.new(1, 0, 255)
       css = Colors::CSS.parse("rgb(1,0,255)")
@@ -16,13 +15,13 @@ class ColorsCSSParserTest < Test::Unit::TestCase
       css = Colors::CSS.parse("rgb(   255 , -10,0)")
       assert_near(ref, css)
     end
-    
+
     test("in-range percent values") do
       ref = Colors::RGB.new(0, 0.55, 1)
       css = Colors::CSS.parse("rgb(0%,55%,100%)")
       assert_near(ref, css)
     end
-    
+
     test("clamps out-of-range percent values") do
       ref = Colors::RGB.new(0r, 0r, 1r)
       css = Colors::CSS.parse("rgb(0%,0%,110%)")
@@ -45,11 +44,9 @@ class ColorsCSSParserTest < Test::Unit::TestCase
         Colors::CSS.parse("rgb(50% 0% 6%)")
       end
     end
-
   end
 
   sub_test_case("rgba") do
-    
     test("integer values, int alpha") do
       ref = Colors::RGBA.new(1r, 0r, 1r, 1r)
       css = Colors::CSS.parse("rgba(255,0,255,1)")
@@ -88,7 +85,7 @@ class ColorsCSSParserTest < Test::Unit::TestCase
       css = Colors::CSS.parse("rgba(50%,0%,6% ,0.5)")
       assert_near(ref, css)
     end
-    
+
     test("bad input") do
       assert_raises ArgumentError, "mixed pct/int" do
         Colors::CSS.parse("rgba(50%,0,6 ,0.5)")
@@ -103,11 +100,9 @@ class ColorsCSSParserTest < Test::Unit::TestCase
         Colors::CSS.parse("rgba(50%,0%,6% 0.5)")
       end
     end
-
   end
 
   sub_test_case("hsl") do
-    
     test("in-range hsl") do
       ref = Colors::HSL.new(180, 0, 0.5)
       css = Colors::CSS.parse("hsl( 180, 0% , 50% )")
@@ -128,7 +123,7 @@ class ColorsCSSParserTest < Test::Unit::TestCase
       css = Colors::CSS.parse("hsl(360,100%,100%)")
       assert_near(ref, css)
     end
-    
+
     test("bad input") do
       assert_raises ArgumentError, "too many args" do
         css = Colors::CSS.parse("hsl( 180, 0% , 50%, 50% )")
@@ -142,9 +137,7 @@ class ColorsCSSParserTest < Test::Unit::TestCase
     end
   end
 
-  
   sub_test_case("hsla") do
-    
     test("in-range hsla") do
       ref = Colors::HSLA.new(180, 0, 0.5, 1.0)
       css = Colors::CSS.parse("hsla( 180, 0% , 50%,1.0)")
@@ -165,7 +158,7 @@ class ColorsCSSParserTest < Test::Unit::TestCase
       css = Colors::CSS.parse("hsla(360,100%,100%, 0.0)")
       assert_near(ref, css)
     end
-    
+
     test("bad input") do
       assert_raises ArgumentError, "too many args" do
         css = Colors::CSS.parse("hsla( 180, 0% , 50%, 0.0, 0.0 )")
@@ -177,7 +170,5 @@ class ColorsCSSParserTest < Test::Unit::TestCase
         css = Colors::CSS.parse("hsla( 180, 0% 50% 0.0 )")
       end
     end
-    
   end
-  
 end
