@@ -1,9 +1,7 @@
 module Colors
   module CSS
-
     # Factory method for generating RGB/RGBA/HSL/HSLA Objects.
     # Parsing based on spec https://www.w3.org/TR/css-color-3 ; section 4.2
-                                    
     def self.parse(css_string)
       error_message = "must be a string of `rgb(rr,gg,bb)`, `rgba(rr,gg,bb,aa)`, `hsl(hh,ss,ll)`, or `hsla(hh,ss,ll,aa)` form"
       unless css_string.respond_to?(:to_str)
@@ -16,7 +14,7 @@ module Colors
       unless matcher
         raise ArgumentError, "#{error_message}: #{css_string.inspect}"
       end
-      
+
       color_space, args_string = matcher[1..2]
       args = args_string.strip.split(/\s*,\s*/)
       has_alpha = color_space.end_with?("a") # rgba/hsla
@@ -25,7 +23,7 @@ module Colors
       elsif !has_alpha && args.length != 3
         raise ArgumentError, "Expecting 3 fields for #{color_space}(): #{css_string.inspect}"
       end
-      
+
       case color_space
       when "rgb", "rgba"
         rgb, alpha = args[0, 3], args[3]
@@ -46,7 +44,6 @@ module Colors
           raise ArgumentError, "Invalid mix of percent and integer values: #{css_string.inspect}"
         end
         return has_alpha ? RGBA.new(r, g, b, a) : RGB.new(r, g, b)
-        
       when "hsl", "hsla"
         hue, sat, light, alpha = *args
         # CSS3 Hue values are an angle, unclear if we should convert to Integer or Rational here.
@@ -63,4 +60,4 @@ module Colors
       end
     end
   end
-end  
+end
