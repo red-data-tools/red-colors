@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.files += Dir.glob("doc/text/*")
   spec.test_files += Dir.glob("test/**/*")
 
+  spec.add_runtime_dependency("json")
   spec.add_runtime_dependency("matrix")
 
   spec.add_development_dependency("bundler")
