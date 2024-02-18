@@ -30,6 +30,10 @@ jobs:
         include:
         - { os: windows-latest, ruby: mswin }
         - { os: ubuntu-latest , ruby: jruby-head }
+        exclude:
+        # "debug" is invalid on windows-latest.
+        - { os: windows-latest, ruby: debug }
+
 
     steps:
     - uses: actions/checkout@v1
