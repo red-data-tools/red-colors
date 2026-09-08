@@ -12,7 +12,7 @@ module Colors
     def self.load_colormap_data(name)
       path = @colormaps_dir.join("#{name}.json")
       json = File.read(path)
-      JSON.load(json, nil, symbolize_names: true, create_additions: false)
+      JSON.parse(json, symbolize_names: true)
     end
 
     def self.register_listed_colormap(name, data=nil)
