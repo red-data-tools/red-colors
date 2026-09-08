@@ -1,5 +1,11 @@
 # News
 
+## 0.5.0 - 2026-09-09
+
+### Improvements
+
+  * Added support for json 3.0.0 or later.
+
 ## 0.4.0 - 2024-02-18
 
 ### Improvements
